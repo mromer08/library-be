@@ -5,6 +5,7 @@ import java.util.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -72,6 +73,8 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs*/**").permitAll()
                 // .requestMatchers("/ping").hasAuthority("LIBRARIAN")
                 .requestMatchers("/ping/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/configuration").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/configuration").hasAuthority("LIBRARIAN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
