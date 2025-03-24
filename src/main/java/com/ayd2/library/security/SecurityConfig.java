@@ -60,25 +60,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(authEntryPoint)
-            )
-            .sessionManagement(sessionManagement -> sessionManagement
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**").permitAll()
-                .requestMatchers("/v3/api-docs*/**").permitAll()
-                // .requestMatchers("/ping").hasAuthority("LIBRARIAN")
-                .requestMatchers("/ping/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/configuration").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/configuration").hasAuthority("LIBRARIAN")
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-    
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(authEntryPoint))
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs*/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/publishers").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/publishers/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/publishers").hasAuthority("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT, "/publishers/{id}").hasAuthority("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE, "/publishers/{id}").hasAuthority("LIBRARIAN")
+
+                        .requestMatchers("/ping/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/configuration").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/configuration").hasAuthority("LIBRARIAN")
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
