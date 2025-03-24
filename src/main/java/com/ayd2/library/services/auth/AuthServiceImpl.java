@@ -14,6 +14,7 @@ import com.ayd2.library.repositories.student.StudentRepository;
 import com.ayd2.library.repositories.user.RoleRepository;
 import com.ayd2.library.repositories.user.UserAccountRepository;
 import com.ayd2.library.security.JwtTokenService;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,42 +40,54 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenService jwtTokenService;
     private final StudentRepository studentRepository;
 
- public Map<String, String> login(LoginDTO loginDto) throws AuthenticationException, ServiceException {
-    Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    loginDto.email(),
-                    loginDto.password()));
+    public Map<String, String> login(LoginDTO loginDto) throws AuthenticationException, ServiceException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginDto.email(),
+                        loginDto.password()));
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    String accessToken = jwtTokenService.generateAccessToken(authentication.getName());
-    String refreshToken = jwtTokenService.generateRefreshToken(authentication.getName());
+        String accessToken = jwtTokenService.generateAccessToken(authentication.getName());
+        String refreshToken = jwtTokenService.generateRefreshToken(authentication.getName());
 
-    Map<String, String> tokens = new HashMap<>();
-    tokens.put("accessToken", accessToken);
-    tokens.put("refreshToken", refreshToken);
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
 
-    return tokens;
-}
+        return tokens;
+    }
 
+    @Transactional
     public boolean register(StudentRegistrationRequestDTO request) throws ServiceException {
         if (userAccountRepository.existsByEmail(request.userAccount().email())) {
             throw new DuplicatedEntityException("Email already in use");
         }
-
+    
+        if (userAccountRepository.existsByCui(request.userAccount().cui())) {
+            throw new DuplicatedEntityException("CUI already in use");
+        }
+    
+        if (studentRepository.existsByAcademicRecordNumber(request.student().academicRecordNumber())) {
+            throw new DuplicatedEntityException("Academic record number already in use");
+        }
+    
         if (!roleRepository.existsByName("STUDENT")) {
             throw new NotFoundException("Role STUDENT not found");
         }
-
+    
         UserAccount userAccount = StudentRegistrationMapper.INSTANCE.toUserAccount(request.userAccount());
         Student student = StudentRegistrationMapper.INSTANCE.toStudent(request.student());
+        
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
+        
         Role studentRole = roleRepository.findByName("STUDENT").get();
         userAccount.setRole(studentRole);
+        
         UserAccount savedUserAccount = userAccountRepository.save(userAccount);
         student.setUserAccount(savedUserAccount);
         studentRepository.save(student);
-
+    
         return true;
     }
 
