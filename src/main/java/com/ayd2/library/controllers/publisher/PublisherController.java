@@ -5,6 +5,7 @@ import com.ayd2.library.dto.publishers.PublisherResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.publisher.PublisherService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @PostMapping
-    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody PublisherRequestDTO publisherRequestDTO)
+    public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody @Valid PublisherRequestDTO publisherRequestDTO)
             throws ServiceException {
         PublisherResponseDTO responseDTO = publisherService.createPublisher(publisherRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -31,7 +32,7 @@ public class PublisherController {
     @PutMapping("/{id}")
     public ResponseEntity<PublisherResponseDTO> updatePublisher(
             @PathVariable UUID id,
-            @RequestBody PublisherRequestDTO publisherRequestDTO) throws ServiceException {
+            @RequestBody @Valid PublisherRequestDTO publisherRequestDTO) throws ServiceException {
         PublisherResponseDTO responseDTO = publisherService.updatePublisher(id, publisherRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
