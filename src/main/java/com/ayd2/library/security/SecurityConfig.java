@@ -82,6 +82,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/authors/{id}").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/authors/{id}").hasAuthority("LIBRARIAN")
 
+                        .requestMatchers(HttpMethod.GET, "/degrees").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/degrees/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/degrees").hasAuthority("LIBRARIAN")
+                        .requestMatchers(HttpMethod.PUT, "/degrees/{id}").hasAuthority("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE, "/degrees/{id}").hasAuthority("LIBRARIAN")
+
                         .requestMatchers("/ping/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/configuration").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/configuration").hasAuthority("LIBRARIAN")
