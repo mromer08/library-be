@@ -28,30 +28,32 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginDTO loginDto) throws AuthenticationException, ServiceException {
-            Map<String, String> tokens = authService.login(loginDto);
-            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/")
-                    .maxAge(Duration.ofSeconds(60))
-                    .sameSite("Lax")
-                    .build();
-    
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-                    .body(new AuthResponseDTO(tokens.get("accessToken")));
-    
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginDTO loginDto)
+            throws AuthenticationException, ServiceException {
+        Map<String, String> tokens = authService.login(loginDto);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(Duration.ofSeconds(60))
+                .sameSite("Lax")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(new AuthResponseDTO(tokens.get("accessToken")));
+
     }
 
-@PostMapping("/register")
-public ResponseEntity<Void> register(@RequestBody @Valid StudentRegistrationRequestDTO registerDto) throws ServiceException {
-    authService.register(registerDto);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-}
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@RequestBody @Valid StudentRegistrationRequestDTO registerDto)
+            throws ServiceException {
+        authService.register(registerDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDTO> refreshToken(@CookieValue String refreshToken) throws ServiceException{
+    public ResponseEntity<AuthResponseDTO> refreshToken(@CookieValue String refreshToken) throws ServiceException {
 
         System.out.println("Refresh token: " + refreshToken);
         AuthResponseDTO authResponse = authService.refreshToken(refreshToken);
