@@ -9,5 +9,8 @@ import com.ayd2.library.models.user.UserAccount;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> {
     Optional<UserAccount> findByEmail(String username);
-    Boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, UUID id);
+    boolean existsByCui(Long cui);
+    boolean existsByCuiAndIdNot(Long cui, UUID id);
 }
