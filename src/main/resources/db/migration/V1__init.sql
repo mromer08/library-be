@@ -30,7 +30,7 @@ CREATE TABLE book (
     quantity INT DEFAULT 1,
     publication_date DATE,
     available_copies INT DEFAULT 1,
-    price DECIMAL(10,2),
+    price DECIMAL(10,2) NOT NULL,
     image_url VARCHAR(255),
     FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE SET NULL,
     FOREIGN KEY (publisher_id) REFERENCES publisher(id) ON DELETE SET NULL

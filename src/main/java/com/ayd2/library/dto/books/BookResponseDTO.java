@@ -14,8 +14,8 @@ public record BookResponseDTO(
     String title,
     String isbn,
     String code,
-    int quantity,
-    int availableCopies,
+    Integer quantity,
+    Integer availableCopies,
     LocalDate publicationDate,
     BigDecimal price,
     String imageUrl

@@ -8,8 +8,5 @@ public record UpdateUserAccountRequestDTO(
     @Email(message = "Email is not valid")    
     String email,
 
-    @Size(min = 3, message = "Name must be at least 3 characters long")
-    String name,
-
     MultipartFile imageFile
 ) {}

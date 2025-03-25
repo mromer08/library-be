@@ -19,10 +19,15 @@ public interface BookMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "publisher", ignore = true)
+    @Mapping(target = "availableCopies", ignore = true)
+    @Mapping(target = "imageUrl", ignore = true)
     Book toBook(NewBookRequestDTO bookRequestDTO);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, ignoreByDefault = true)
+    @Mapping(target = "title")
+    @Mapping(target = "quantity")
+    @Mapping(target = "publicationDate")
+    @Mapping(target = "price")
     void updateBookFromDTO(UpdateBookRequestDTO dto, @MappingTarget Book book);
     
 }

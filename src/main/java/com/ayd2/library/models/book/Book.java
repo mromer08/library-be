@@ -18,8 +18,8 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "UUID DEFAULT gen_random_uuid()")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column()
     private UUID id;
 
     @ManyToOne
@@ -39,16 +39,16 @@ public class Book {
     @Column(nullable = false, unique = true, length = 20)
     private String isbn;
 
-    @Column(nullable = false)
-    private int quantity = 1;
+    @Column
+    private Integer quantity;
 
     @Column(name = "publication_date")
     private LocalDate publicationDate;
 
-    @Column(nullable = false)
-    private int availableCopies = 1;
+    @Column
+    private Integer availableCopies;
 
-    @Column(precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
     @Column(name = "image_url", length = 255)
