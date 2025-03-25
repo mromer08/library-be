@@ -33,9 +33,9 @@ public class AuthController {
         Map<String, String> tokens = authService.login(loginDto);
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/")
-                .maxAge(Duration.ofSeconds(60))
+                .maxAge(Duration.ofDays(7))
                 .sameSite("None")
                 .build();
 
@@ -54,10 +54,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponseDTO> refreshToken(@CookieValue String refreshToken) throws ServiceException {
-
-        System.out.println("Refresh token: " + refreshToken);
         AuthResponseDTO authResponse = authService.refreshToken(refreshToken);
-        System.out.println(authResponse);
         return ResponseEntity.ok(authResponse);
     }
 }
