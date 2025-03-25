@@ -23,14 +23,12 @@ public class UserAccountController {
 
     private final UserAccountService userAccountService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(
-            @PathVariable UUID id,
-            @RequestBody @Valid UpdateUserAccountRequestDTO dto) throws ServiceException {
-        UserResponseDTO responseDTO = userAccountService.updateUser(id, dto);
-        return ResponseEntity.ok(responseDTO);
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<UserResponseDTO> users = userAccountService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
-
+    
     @GetMapping("/me")
     public ResponseEntity<UserResponseDTO> getAuthenticatedUser(Authentication authentication) throws Exception {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -48,12 +46,14 @@ public class UserAccountController {
         
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userAccountService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable UUID id,
+            @RequestBody @Valid UpdateUserAccountRequestDTO dto) throws ServiceException {
+        UserResponseDTO responseDTO = userAccountService.updateUser(id, dto);
+        return ResponseEntity.ok(responseDTO);
     }
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) throws ServiceException {
         userAccountService.deleteUser(id);

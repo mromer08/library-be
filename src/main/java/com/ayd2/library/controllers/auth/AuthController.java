@@ -31,14 +31,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginDTO loginDto)
             throws AuthenticationException, ServiceException {
         Map<String, String> tokens = authService.login(loginDto);
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(Duration.ofDays(7))
-                .sameSite("None")
-                .build();
-
+        ResponseCookie refreshTokenCookie = createRefreshTokenCookie(tokens.get("refreshToken"), Duration.ofDays(7));
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                 .body(new AuthResponseDTO(tokens.get("accessToken")));
@@ -57,4 +50,24 @@ public class AuthController {
         AuthResponseDTO authResponse = authService.refreshToken(refreshToken);
         return ResponseEntity.ok(authResponse);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        ResponseCookie expiredCookie = createRefreshTokenCookie("", Duration.ZERO);
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
+                .build();
+    }
+
+    private ResponseCookie createRefreshTokenCookie(String tokenValue, Duration maxAge) {
+        return ResponseCookie.from("refreshToken", tokenValue)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(maxAge)
+                .sameSite("None")
+                .build();
+    }
+
 }
