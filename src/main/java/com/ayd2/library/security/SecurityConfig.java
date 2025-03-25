@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,7 +40,6 @@ public class SecurityConfig {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-        // config.setAllowedOriginPatterns(Collections.singletonList("*")); 
         config.setAllowedHeaders(Arrays.asList(
             HttpHeaders.ORIGIN,
             HttpHeaders.CONTENT_TYPE,
@@ -60,6 +60,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(authEntryPoint))
