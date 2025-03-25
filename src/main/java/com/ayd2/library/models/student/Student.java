@@ -28,7 +28,7 @@ public class Student {
     private Boolean penalty;
 
     @Column(nullable = false, unique = true)
-    private Long academicRecordNumber;
+    private Long carnet;
 
     @ManyToOne
     @JoinColumn(name = "degree_id")

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ayd2.library.models.student.Student;
 
 public interface StudentRepository extends JpaRepository<Student, UUID> {
-    boolean existsByAcademicRecordNumber(Long academicRecordNumber);
+    boolean existsByCarnet(Long carnet);
 }

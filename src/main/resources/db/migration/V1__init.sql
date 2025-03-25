@@ -65,7 +65,7 @@ CREATE TABLE student (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID UNIQUE NOT NULL,
     penalty BOOLEAN DEFAULT FALSE,
-    academic_record_number BIGINT UNIQUE NOT NULL,
+    carnet BIGINT UNIQUE NOT NULL,
     degree_id UUID,
     FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE,
     FOREIGN KEY (degree_id) REFERENCES degree(id) ON DELETE SET NULL

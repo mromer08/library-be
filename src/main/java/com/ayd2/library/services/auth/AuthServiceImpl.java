@@ -7,9 +7,11 @@ import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.mappers.auth.StudentRegistrationMapper;
+import com.ayd2.library.models.degree.Degree;
 import com.ayd2.library.models.student.Student;
 import com.ayd2.library.models.user.Role;
 import com.ayd2.library.models.user.UserAccount;
+import com.ayd2.library.repositories.degree.DegreeRepository;
 import com.ayd2.library.repositories.student.StudentRepository;
 import com.ayd2.library.repositories.user.RoleRepository;
 import com.ayd2.library.repositories.user.UserAccountRepository;
@@ -39,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenService;
     private final StudentRepository studentRepository;
+    private final DegreeRepository degreeRepository;
 
     public Map<String, String> login(LoginDTO loginDto) throws AuthenticationException, ServiceException {
         Authentication authentication = authenticationManager.authenticate(
@@ -68,12 +71,16 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicatedEntityException("CUI already in use");
         }
     
-        if (studentRepository.existsByAcademicRecordNumber(request.student().academicRecordNumber())) {
+        if (studentRepository.existsByCarnet(request.student().carnet())) {
             throw new DuplicatedEntityException("Academic record number already in use");
         }
     
         if (!roleRepository.existsByName("STUDENT")) {
             throw new NotFoundException("Role STUDENT not found");
+        }
+
+        if (!degreeRepository.existsById(request.student().degreeId())) {
+            throw new NotFoundException("Degree not found");
         }
     
         UserAccount userAccount = StudentRegistrationMapper.INSTANCE.toUserAccount(request.userAccount());
@@ -83,9 +90,12 @@ public class AuthServiceImpl implements AuthService {
         
         Role studentRole = roleRepository.findByName("STUDENT").get();
         userAccount.setRole(studentRole);
+
+        Degree studentDegree = degreeRepository.findById(request.student().degreeId()).get();
         
         UserAccount savedUserAccount = userAccountRepository.save(userAccount);
         student.setUserAccount(savedUserAccount);
+        student.setDegree(studentDegree);
         studentRepository.save(student);
     
         return true;

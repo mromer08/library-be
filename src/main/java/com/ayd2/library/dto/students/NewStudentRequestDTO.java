@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record NewStudentRequestDTO(
     @Digits(integer = 9, fraction = 0, message = "Academic record number must be exactly 9 digits")
-    Long academicRecordNumber,
+    Long carnet,
     @NotNull(message = "Career ID is required")
     UUID degreeId
 ) {}
