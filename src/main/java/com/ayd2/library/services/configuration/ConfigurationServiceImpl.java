@@ -8,6 +8,9 @@ import com.ayd2.library.models.configuration.Configuration;
 import com.ayd2.library.repositories.configuration.ConfigurationRepository;
 import com.ayd2.library.services.s3.S3Service;
 
+import software.amazon.awssdk.core.exception.SdkException;
+
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +35,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     public ConfigurationResponseDTO updateConfiguration(UpdateConfigurationRequestDTO updateRequest)
-            throws NotFoundException {
+            throws NotFoundException, IOException, SdkException {
         Configuration configuration = configurationRepository.findFirstByOrderByIdAsc()
                 .orElseThrow(() -> new NotFoundException("Configuration not found"));
 

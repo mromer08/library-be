@@ -1,5 +1,6 @@
 package com.ayd2.library.controllers.exception;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.ayd2.library.exceptions.*;
+
+import software.amazon.awssdk.core.exception.SdkException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -66,6 +69,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setTitle("Missing Request Cookie");
         problemDetail.setProperty("error_category", "Request");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(SdkException.class)
+    ProblemDetail handleSdkException(SdkException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                "An error occurred while communicating with AWS");
+        problemDetail.setTitle("AWS SDK Error");
+        problemDetail.setProperty("error_category", "AWS_SDK_ERROR");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(IOException.class)
+    ProblemDetail handleIOException(IOException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage());
+        problemDetail.setTitle("Input/Output Error");
+        problemDetail.setProperty("error_category", "IO_ERROR");
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }

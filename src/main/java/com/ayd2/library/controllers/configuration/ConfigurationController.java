@@ -7,6 +7,9 @@ import com.ayd2.library.services.configuration.ConfigurationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.exception.SdkException;
+
+import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +29,7 @@ public class ConfigurationController {
 
     @PutMapping
     public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(
-            @ModelAttribute @Valid UpdateConfigurationRequestDTO updateRequest) throws NotFoundException {
+            @ModelAttribute @Valid UpdateConfigurationRequestDTO updateRequest) throws NotFoundException, IOException, SdkException {
         ConfigurationResponseDTO response = configurationService.updateConfiguration(updateRequest);
         return ResponseEntity.ok(response);
     }
