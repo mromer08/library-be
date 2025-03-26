@@ -26,7 +26,7 @@ public class ConfigurationController {
 
     @PutMapping
     public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(
-            @RequestBody @Valid UpdateConfigurationRequestDTO updateRequest) throws NotFoundException {
+            @ModelAttribute @Valid UpdateConfigurationRequestDTO updateRequest) throws NotFoundException {
         ConfigurationResponseDTO response = configurationService.updateConfiguration(updateRequest);
         return ResponseEntity.ok(response);
     }

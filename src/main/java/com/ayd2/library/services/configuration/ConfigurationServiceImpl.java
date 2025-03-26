@@ -6,16 +6,22 @@ import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.mappers.configuration.ConfigurationMapper;
 import com.ayd2.library.models.configuration.Configuration;
 import com.ayd2.library.repositories.configuration.ConfigurationRepository;
+import com.ayd2.library.services.s3.S3Service;
+
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ConfigurationRepository configurationRepository;
+    private final S3Service s3Service;
     private final ConfigurationMapper configurationMapper = ConfigurationMapper.INSTANCE;
 
-    public ConfigurationServiceImpl(ConfigurationRepository configurationRepository) {
+    public ConfigurationServiceImpl(ConfigurationRepository configurationRepository, S3Service s3Service) {
+        this.s3Service = s3Service;
         this.configurationRepository = configurationRepository;
     }
 
@@ -29,6 +35,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             throws NotFoundException {
         Configuration configuration = configurationRepository.findFirstByOrderByIdAsc()
                 .orElseThrow(() -> new NotFoundException("Configuration not found"));
+
+        MultipartFile imageFile = updateRequest.imageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            String imageUrl = s3Service.uploadFile(uuid.toString(), imageFile);
+            configuration.setLogo(imageUrl);
+        }
 
         configurationMapper.updateConfigurationFromDTO(updateRequest, configuration);
         Configuration updatedConfiguration = configurationRepository.save(configuration);

@@ -43,7 +43,6 @@ public class S3ServiceImpl implements S3Service {
             s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromInputStream(
                     file.getInputStream(), file.getSize()));
 
-            // Retornar la URL del objeto
             return finalFileName;
         } catch (IOException e) {
             throw new RuntimeException("Error al subir el archivo a S3", e);

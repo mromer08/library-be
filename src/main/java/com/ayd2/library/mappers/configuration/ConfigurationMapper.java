@@ -20,5 +20,6 @@ public interface ConfigurationMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "logo", ignore = true)
     void updateConfigurationFromDTO(UpdateConfigurationRequestDTO dto, @MappingTarget Configuration configuration);
 }
