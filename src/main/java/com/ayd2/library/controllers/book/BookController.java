@@ -26,8 +26,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<BookResponseDTO> createBook(@RequestBody @Valid NewBookRequestDTO bookRequestDTO)
-            throws ServiceException {
+    public ResponseEntity<BookResponseDTO> createBook(@ModelAttribute @Valid NewBookRequestDTO bookRequestDTO)
+            throws Exception {
         BookResponseDTO responseDTO = bookService.createBook(bookRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -35,7 +35,7 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponseDTO> updateBook(
             @PathVariable UUID id,
-            @RequestBody @Valid UpdateBookRequestDTO bookRequestDTO) throws ServiceException {
+            @ModelAttribute @Valid UpdateBookRequestDTO bookRequestDTO) throws Exception {
         BookResponseDTO responseDTO = bookService.updateBook(id, bookRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }

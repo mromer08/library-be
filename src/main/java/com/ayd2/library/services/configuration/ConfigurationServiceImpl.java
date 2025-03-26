@@ -8,6 +8,7 @@ import com.ayd2.library.models.configuration.Configuration;
 import com.ayd2.library.repositories.configuration.ConfigurationRepository;
 import com.ayd2.library.services.s3.S3Service;
 
+import jakarta.transaction.Transactional;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ConfigurationRepository configurationRepository;
