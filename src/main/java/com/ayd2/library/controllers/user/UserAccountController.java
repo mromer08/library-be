@@ -38,7 +38,7 @@ public class UserAccountController {
     @PutMapping("/me")
     public ResponseEntity<UserResponseDTO> updateAuthenticatedUser(
             Authentication authentication,
-            @RequestBody @Valid UpdateUserAccountRequestDTO dto) throws Exception {
+            @ModelAttribute @Valid UpdateUserAccountRequestDTO dto) throws Exception {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         UUID userId = userAccountService.getUserByEmail(userDetails.getUsername()).id();
         UserResponseDTO responseDTO = userAccountService.updateUser(userId, dto);
@@ -49,7 +49,7 @@ public class UserAccountController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable UUID id,
-            @RequestBody @Valid UpdateUserAccountRequestDTO dto) throws ServiceException {
+            @RequestBody @Valid UpdateUserAccountRequestDTO dto) throws Exception {
         UserResponseDTO responseDTO = userAccountService.updateUser(id, dto);
         return ResponseEntity.ok(responseDTO);
     }

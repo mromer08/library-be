@@ -8,17 +8,17 @@ import com.ayd2.library.models.configuration.Configuration;
 import com.ayd2.library.repositories.configuration.ConfigurationRepository;
 import com.ayd2.library.services.s3.S3Service;
 
-import jakarta.transaction.Transactional;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@Transactional(rollbackOn = Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ConfigurationRepository configurationRepository;
