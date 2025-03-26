@@ -8,12 +8,14 @@ import com.ayd2.library.mappers.publisher.PublisherMapper;
 import com.ayd2.library.models.publisher.Publisher;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PublisherServiceImpl implements PublisherService {
 
     private final PublisherRepository publisherRepository;
@@ -24,9 +26,11 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public PublisherResponseDTO createPublisher(PublisherRequestDTO publisherRequestDTO) throws DuplicatedEntityException {
+    public PublisherResponseDTO createPublisher(PublisherRequestDTO publisherRequestDTO)
+            throws DuplicatedEntityException {
         if (publisherRepository.existsByName(publisherRequestDTO.name())) {
-            throw new DuplicatedEntityException("A publisher with the name '" + publisherRequestDTO.name() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "A publisher with the name '" + publisherRequestDTO.name() + "' already exists.");
         }
 
         Publisher publisher = publisherMapper.toPublisher(publisherRequestDTO);
@@ -35,12 +39,14 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public PublisherResponseDTO updatePublisher(UUID id, PublisherRequestDTO publisherRequestDTO) throws NotFoundException, DuplicatedEntityException {
+    public PublisherResponseDTO updatePublisher(UUID id, PublisherRequestDTO publisherRequestDTO)
+            throws NotFoundException, DuplicatedEntityException {
         Publisher existingPublisher = publisherRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Publisher not found with id: " + id));
 
         if (publisherRepository.existsByNameAndIdNot(publisherRequestDTO.name(), id)) {
-            throw new DuplicatedEntityException("A publisher with the name '" + publisherRequestDTO.name() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "A publisher with the name '" + publisherRequestDTO.name() + "' already exists.");
         }
 
         publisherMapper.updatePublisherFromDTO(publisherRequestDTO, existingPublisher);

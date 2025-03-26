@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class AuthServiceImpl implements AuthService {
 
     private final UserAccountRepository userAccountRepository;
@@ -66,15 +67,15 @@ public class AuthServiceImpl implements AuthService {
         if (userAccountRepository.existsByEmail(request.userAccount().email())) {
             throw new DuplicatedEntityException("Email already in use");
         }
-    
+
         if (userAccountRepository.existsByCui(request.userAccount().cui())) {
             throw new DuplicatedEntityException("CUI already in use");
         }
-    
+
         if (studentRepository.existsByCarnet(request.student().carnet())) {
             throw new DuplicatedEntityException("Academic record number already in use");
         }
-    
+
         if (!roleRepository.existsByName("STUDENT")) {
             throw new NotFoundException("Role STUDENT not found");
         }
@@ -82,22 +83,22 @@ public class AuthServiceImpl implements AuthService {
         if (!degreeRepository.existsById(request.student().degreeId())) {
             throw new NotFoundException("Degree not found");
         }
-    
+
         UserAccount userAccount = StudentRegistrationMapper.INSTANCE.toUserAccount(request.userAccount());
         Student student = StudentRegistrationMapper.INSTANCE.toStudent(request.student());
-        
+
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
-        
+
         Role studentRole = roleRepository.findByName("STUDENT").get();
         userAccount.setRole(studentRole);
 
         Degree studentDegree = degreeRepository.findById(request.student().degreeId()).get();
-        
+
         UserAccount savedUserAccount = userAccountRepository.save(userAccount);
         student.setUserAccount(savedUserAccount);
         student.setDegree(studentDegree);
         studentRepository.save(student);
-    
+
         return true;
     }
 

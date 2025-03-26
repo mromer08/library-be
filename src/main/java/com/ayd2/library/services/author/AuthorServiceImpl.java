@@ -6,12 +6,14 @@ import com.ayd2.library.mappers.author.AuthorMapper;
 import com.ayd2.library.models.author.Author;
 import com.ayd2.library.repositories.author.AuthorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
@@ -24,7 +26,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public AuthorResponseDTO createAuthor(NewAuthorRequestDTO authorRequestDTO) throws DuplicatedEntityException {
         if (authorRepository.existsByName(authorRequestDTO.name())) {
-            throw new DuplicatedEntityException("An author with the name '" + authorRequestDTO.name() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "An author with the name '" + authorRequestDTO.name() + "' already exists.");
         }
 
         Author author = authorMapper.toAuthor(authorRequestDTO);
@@ -33,12 +36,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorResponseDTO updateAuthor(UUID id, UpdateAuthorRequestDTO authorRequestDTO) throws NotFoundException, DuplicatedEntityException {
+    public AuthorResponseDTO updateAuthor(UUID id, UpdateAuthorRequestDTO authorRequestDTO)
+            throws NotFoundException, DuplicatedEntityException {
         Author existingAuthor = authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Author not found with id: " + id));
 
         if (authorRepository.existsByNameAndIdNot(authorRequestDTO.name(), id)) {
-            throw new DuplicatedEntityException("An author with the name '" + authorRequestDTO.name() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "An author with the name '" + authorRequestDTO.name() + "' already exists.");
         }
 
         authorMapper.updateAuthorFromDTO(authorRequestDTO, existingAuthor);

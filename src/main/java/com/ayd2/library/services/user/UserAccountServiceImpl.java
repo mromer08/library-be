@@ -35,7 +35,8 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserResponseDTO updateUser(UUID id, UpdateUserAccountRequestDTO dto) throws NotFoundException, DuplicatedEntityException, IOException, SdkException {
+    public UserResponseDTO updateUser(UUID id, UpdateUserAccountRequestDTO dto)
+            throws NotFoundException, DuplicatedEntityException, IOException, SdkException {
         UserAccount userAccount = userAccountRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
@@ -77,4 +78,3 @@ public class UserAccountServiceImpl implements UserAccountService {
         userAccountRepository.delete(userAccount);
     }
 }
-

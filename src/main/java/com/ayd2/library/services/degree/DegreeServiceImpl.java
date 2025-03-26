@@ -6,12 +6,14 @@ import com.ayd2.library.mappers.degree.DegreeMapper;
 import com.ayd2.library.models.degree.Degree;
 import com.ayd2.library.repositories.degree.DegreeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class DegreeServiceImpl implements DegreeService {
 
     private final DegreeRepository degreeRepository;
@@ -24,7 +26,8 @@ public class DegreeServiceImpl implements DegreeService {
     @Override
     public DegreeResponseDTO createDegree(NewDegreeRequestDTO degreeRequestDTO) throws DuplicatedEntityException {
         if (degreeRepository.existsByCode(degreeRequestDTO.code())) {
-            throw new DuplicatedEntityException("A degree with the code '" + degreeRequestDTO.code() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "A degree with the code '" + degreeRequestDTO.code() + "' already exists.");
         }
 
         Degree degree = degreeMapper.toDegree(degreeRequestDTO);
@@ -33,12 +36,14 @@ public class DegreeServiceImpl implements DegreeService {
     }
 
     @Override
-    public DegreeResponseDTO updateDegree(UUID id, UpdateDegreeRequestDTO degreeRequestDTO) throws NotFoundException, DuplicatedEntityException {
+    public DegreeResponseDTO updateDegree(UUID id, UpdateDegreeRequestDTO degreeRequestDTO)
+            throws NotFoundException, DuplicatedEntityException {
         Degree existingDegree = degreeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Degree not found with id: " + id));
 
         if (degreeRepository.existsByCodeAndIdNot(degreeRequestDTO.code(), id)) {
-            throw new DuplicatedEntityException("A degree with the code '" + degreeRequestDTO.code() + "' already exists.");
+            throw new DuplicatedEntityException(
+                    "A degree with the code '" + degreeRequestDTO.code() + "' already exists.");
         }
 
         degreeMapper.updateDegreeFromDTO(degreeRequestDTO, existingDegree);

@@ -13,19 +13,19 @@ import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 import com.ayd2.library.services.s3.S3Service;
 
-import jakarta.transaction.Transactional;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
 
 @Service
-@Transactional(rollbackOn = Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
