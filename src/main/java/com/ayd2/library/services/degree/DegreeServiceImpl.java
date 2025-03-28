@@ -1,19 +1,21 @@
 package com.ayd2.library.services.degree;
 
 import com.ayd2.library.dto.degrees.*;
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.*;
 import com.ayd2.library.mappers.degree.DegreeMapper;
+import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.models.degree.Degree;
 import com.ayd2.library.repositories.degree.DegreeRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -22,6 +24,7 @@ public class DegreeServiceImpl implements DegreeService {
 
     private final DegreeRepository degreeRepository;
     private final DegreeMapper degreeMapper;
+    private final GenericPageMapper degreePageMapper;
 
     @Override
     public DegreeResponseDTO createDegree(NewDegreeRequestDTO degreeRequestDTO) throws DuplicatedEntityException {
@@ -59,11 +62,10 @@ public class DegreeServiceImpl implements DegreeService {
     }
 
     @Override
-    public List<DegreeResponseDTO> getAllDegrees() {
-        List<Degree> degrees = degreeRepository.findAll();
-        return degrees.stream()
-                .map(degreeMapper::toDegreeResponseDTO)
-                .collect(Collectors.toList());
+    public PagedResponseDTO<DegreeResponseDTO> getAllDegrees(Pageable pageable) {
+        Page<Degree> page = degreeRepository.findAll(pageable);
+        Page<DegreeResponseDTO> dtoPage = page.map(degreeMapper::toDegreeResponseDTO);
+        return degreePageMapper.toPagedResponse(dtoPage);
     }
 
     @Override

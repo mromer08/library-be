@@ -3,17 +3,19 @@ package com.ayd2.library.controllers.degree;
 import com.ayd2.library.dto.degrees.DegreeResponseDTO;
 import com.ayd2.library.dto.degrees.NewDegreeRequestDTO;
 import com.ayd2.library.dto.degrees.UpdateDegreeRequestDTO;
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.degree.DegreeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,9 +47,8 @@ public class DegreeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DegreeResponseDTO>> getAllDegrees() {
-        List<DegreeResponseDTO> degrees = degreeService.getAllDegrees();
-        return ResponseEntity.ok(degrees);
+    public ResponseEntity<PagedResponseDTO<DegreeResponseDTO>> getAllDegrees(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(degreeService.getAllDegrees(pageable));
     }
 
     @DeleteMapping("/{id}")
