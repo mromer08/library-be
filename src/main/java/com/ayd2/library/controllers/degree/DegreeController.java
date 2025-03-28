@@ -7,6 +7,7 @@ import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.degree.DegreeService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public class DegreeController {
     private final DegreeService degreeService;
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<DegreeResponseDTO> createDegree(@RequestBody @Valid NewDegreeRequestDTO degreeRequestDTO)
             throws ServiceException {
         DegreeResponseDTO responseDTO = degreeService.createDegree(degreeRequestDTO);
@@ -33,6 +35,7 @@ public class DegreeController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<DegreeResponseDTO> updateDegree(
             @PathVariable UUID id,
             @RequestBody @Valid UpdateDegreeRequestDTO degreeRequestDTO) throws ServiceException {
@@ -52,6 +55,7 @@ public class DegreeController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deleteDegree(@PathVariable UUID id) throws ServiceException {
         degreeService.deleteDegree(id);
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import com.ayd2.library.dto.students.StudentResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.student.StudentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/students")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class StudentController {
 
     private final StudentService studentService;

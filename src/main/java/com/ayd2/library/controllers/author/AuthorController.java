@@ -5,6 +5,7 @@ import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.author.AuthorService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<AuthorResponseDTO> createAuthor(@RequestBody @Valid NewAuthorRequestDTO authorRequestDTO)
             throws ServiceException {
         AuthorResponseDTO responseDTO = authorService.createAuthor(authorRequestDTO);
@@ -31,6 +33,7 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<AuthorResponseDTO> updateAuthor(
             @PathVariable UUID id,
             @RequestBody @Valid UpdateAuthorRequestDTO authorRequestDTO) throws ServiceException {
@@ -50,6 +53,7 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deleteAuthor(@PathVariable UUID id) throws ServiceException {
         authorService.deleteAuthor(id);
         return ResponseEntity.noContent().build();

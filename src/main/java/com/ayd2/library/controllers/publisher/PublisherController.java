@@ -6,6 +6,7 @@ import com.ayd2.library.dto.publishers.PublisherResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.publisher.PublisherService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<PublisherResponseDTO> createPublisher(@RequestBody @Valid PublisherRequestDTO publisherRequestDTO)
             throws ServiceException {
         PublisherResponseDTO responseDTO = publisherService.createPublisher(publisherRequestDTO);
@@ -32,6 +34,7 @@ public class PublisherController {
     }
 
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<PublisherResponseDTO> updatePublisher(
             @PathVariable UUID id,
             @RequestBody @Valid PublisherRequestDTO publisherRequestDTO) throws ServiceException {
@@ -51,6 +54,7 @@ public class PublisherController {
     }
 
     @DeleteMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deletePublisher(@PathVariable UUID id) throws ServiceException {
         publisherService.deletePublisher(id);
         return ResponseEntity.noContent().build();

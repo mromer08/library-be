@@ -5,6 +5,7 @@ import com.ayd2.library.dto.configurations.UpdateConfigurationRequestDTO;
 import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.services.configuration.ConfigurationService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;
@@ -28,6 +29,7 @@ public class ConfigurationController {
     }
 
     @PutMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<ConfigurationResponseDTO> updateConfiguration(
             @ModelAttribute @Valid UpdateConfigurationRequestDTO updateRequest) throws NotFoundException, IOException, SdkException {
         ConfigurationResponseDTO response = configurationService.updateConfiguration(updateRequest);

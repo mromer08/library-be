@@ -7,6 +7,7 @@ import com.ayd2.library.dto.users.UserDetailResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.user.UserAccountService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
