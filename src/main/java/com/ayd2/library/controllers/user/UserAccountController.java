@@ -1,19 +1,22 @@
 package com.ayd2.library.controllers.user;
 
 import com.ayd2.library.dto.users.UserResponseDTO;
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.users.UpdateUserAccountRequestDTO;
+import com.ayd2.library.dto.users.UserDetailResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.user.UserAccountService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,8 +27,8 @@ public class UserAccountController {
     private final UserAccountService userAccountService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> users = userAccountService.getAllUsers();
+    public ResponseEntity<PagedResponseDTO<UserResponseDTO>> getAllUsers(@PageableDefault Pageable pageable) {
+        PagedResponseDTO<UserResponseDTO> users = userAccountService.getAllUsers(pageable);
         return ResponseEntity.ok(users);
     }
     
@@ -60,9 +63,9 @@ public class UserAccountController {
         return ResponseEntity.noContent().build();
     }
 
-    // @GetMapping("/{email}")
-    // public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) throws ServiceException {
-    //     UserResponseDTO responseDTO = userAccountService.getUserByEmail(email);
-    //     return ResponseEntity.ok(responseDTO);
-    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDetailResponseDTO> getUserById(@PathVariable UUID id) throws ServiceException {
+        UserDetailResponseDTO responseDTO = userAccountService.getUserById(id);
+        return ResponseEntity.ok(responseDTO);
+    }
 }

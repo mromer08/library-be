@@ -1,37 +1,38 @@
 package com.ayd2.library.services.user;
 
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.users.UpdateUserAccountRequestDTO;
+import com.ayd2.library.dto.users.UserDetailResponseDTO;
 import com.ayd2.library.dto.users.UserResponseDTO;
 import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
+import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.mappers.user.UserMapper;
 import com.ayd2.library.models.user.UserAccount;
 import com.ayd2.library.repositories.user.UserAccountRepository;
 import com.ayd2.library.services.s3.S3Service;
 
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
     private final S3Service s3Service;
-    private final UserMapper userMapper = UserMapper.INSTANCE;
-
-    public UserAccountServiceImpl(UserAccountRepository userAccountRepository, S3Service s3Service) {
-        this.s3Service = s3Service;
-        this.userAccountRepository = userAccountRepository;
-    }
+    private final UserMapper userMapper;
+    private final GenericPageMapper pageMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -64,10 +65,17 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public List<UserResponseDTO> getAllUsers() {
-        return userAccountRepository.findAll().stream()
-                .map(userMapper::toUserResponseDTO)
-                .collect(Collectors.toList());
+    public UserDetailResponseDTO getUserById(UUID id) throws NotFoundException {
+        UserAccount userAccount = userAccountRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        return userMapper.toUserDetailResponseDTO(userAccount);
+    }
+
+    @Override
+    public PagedResponseDTO<UserResponseDTO> getAllUsers(Pageable pageable) {
+        Page<UserAccount> page = userAccountRepository.findAll(pageable);
+        Page<UserResponseDTO> dtoPage = page.map(userMapper::toUserResponseDTO);
+        return pageMapper.toPagedResponse(dtoPage);
     }
 
     @Override

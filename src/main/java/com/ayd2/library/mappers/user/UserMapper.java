@@ -9,13 +9,16 @@ import org.mapstruct.factory.Mappers;
 
 import com.ayd2.library.dto.users.UserResponseDTO;
 import com.ayd2.library.dto.users.UpdateUserAccountRequestDTO;
+import com.ayd2.library.dto.users.UserDetailResponseDTO;
 import com.ayd2.library.models.user.UserAccount;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserResponseDTO toUserResponseDTO(UserAccount userAccount);
+
+    UserDetailResponseDTO toUserDetailResponseDTO(UserAccount userAccount);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, ignoreByDefault = true)
     @Mapping(target = "email")
