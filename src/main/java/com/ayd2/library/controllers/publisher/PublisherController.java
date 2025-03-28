@@ -1,5 +1,6 @@
 package com.ayd2.library.controllers.publisher;
 
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.publishers.PublisherRequestDTO;
 import com.ayd2.library.dto.publishers.PublisherResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
@@ -8,11 +9,12 @@ import com.ayd2.library.services.publisher.PublisherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -44,9 +46,8 @@ public class PublisherController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PublisherResponseDTO>> getAllPublishers() {
-        List<PublisherResponseDTO> publishers = publisherService.getAllPublishers();
-        return ResponseEntity.ok(publishers);
+    public ResponseEntity<PagedResponseDTO<PublisherResponseDTO>> getAllPublishers(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(publisherService.getAllPublishers(pageable));
     }
 
     @DeleteMapping("/{id}")

@@ -1,21 +1,23 @@
 package com.ayd2.library.services.publisher;
 
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.publishers.PublisherRequestDTO;
 import com.ayd2.library.dto.publishers.PublisherResponseDTO;
 import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
+import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.mappers.publisher.PublisherMapper;
 import com.ayd2.library.models.publisher.Publisher;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     private final PublisherRepository publisherRepository;
     private final PublisherMapper publisherMapper;
+    private final GenericPageMapper publisherPageMapper;
 
     @Override
     public PublisherResponseDTO createPublisher(PublisherRequestDTO publisherRequestDTO)
@@ -62,11 +65,10 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public List<PublisherResponseDTO> getAllPublishers() {
-        List<Publisher> publishers = publisherRepository.findAll();
-        return publishers.stream()
-                .map(publisherMapper::toPublisherResponseDTO)
-                .collect(Collectors.toList());
+    public PagedResponseDTO<PublisherResponseDTO> getAllPublishers(Pageable pageable) {
+        Page<Publisher> page = publisherRepository.findAll(pageable);
+        Page<PublisherResponseDTO> dtoPage = page.map(publisherMapper::toPublisherResponseDTO);
+        return publisherPageMapper.toPagedResponse(dtoPage);
     }
 
     @Override
