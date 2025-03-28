@@ -1,17 +1,19 @@
 package com.ayd2.library.controllers.author;
 
 import com.ayd2.library.dto.authors.*;
+import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.author.AuthorService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,9 +45,8 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorResponseDTO>> getAllAuthors() {
-        List<AuthorResponseDTO> authors = authorService.getAllAuthors();
-        return ResponseEntity.ok(authors);
+    public ResponseEntity<PagedResponseDTO<AuthorResponseDTO>> getAllAuthors(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(authorService.getAllAuthors(pageable));
     }
 
     @DeleteMapping("/{id}")
