@@ -4,7 +4,7 @@ import com.ayd2.library.dto.books.*;
 import com.ayd2.library.exceptions.*;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.mappers.book.BookMapper;
-import com.ayd2.library.mappers.book.BookPageMapper;
+import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.models.author.Author;
 import com.ayd2.library.models.book.Book;
 import com.ayd2.library.models.publisher.Publisher;
@@ -13,6 +13,7 @@ import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 import com.ayd2.library.services.s3.S3Service;
 
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class BookServiceImpl implements BookService {
 
@@ -32,16 +34,8 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
     private final S3Service s3Service;
-    private final BookMapper bookMapper = BookMapper.INSTANCE;
-    private final BookPageMapper bookPageMapper = BookPageMapper.INSTANCE;
-
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-            PublisherRepository publisherRepository, S3Service s3Service) {
-        this.s3Service = s3Service;
-        this.authorRepository = authorRepository;
-        this.publisherRepository = publisherRepository;
-        this.bookRepository = bookRepository;
-    }
+    private final BookMapper bookMapper;
+    private final GenericPageMapper bookPageMapper;
 
     @Override
     public BookResponseDTO createBook(NewBookRequestDTO bookRequestDTO)

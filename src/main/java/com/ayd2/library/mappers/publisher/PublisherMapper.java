@@ -9,7 +9,7 @@ import com.ayd2.library.dto.publishers.PublisherRequestDTO;
 import com.ayd2.library.dto.publishers.PublisherResponseDTO;
 import com.ayd2.library.models.publisher.Publisher;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PublisherMapper {
     PublisherMapper INSTANCE = Mappers.getMapper(PublisherMapper.class);
 

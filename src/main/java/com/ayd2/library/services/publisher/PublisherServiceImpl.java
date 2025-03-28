@@ -7,6 +7,9 @@ import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.mappers.publisher.PublisherMapper;
 import com.ayd2.library.models.publisher.Publisher;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,15 +18,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class PublisherServiceImpl implements PublisherService {
 
     private final PublisherRepository publisherRepository;
-    private final PublisherMapper publisherMapper = PublisherMapper.INSTANCE;
-
-    public PublisherServiceImpl(PublisherRepository publisherRepository) {
-        this.publisherRepository = publisherRepository;
-    }
+    private final PublisherMapper publisherMapper;
 
     @Override
     public PublisherResponseDTO createPublisher(PublisherRequestDTO publisherRequestDTO)

@@ -8,6 +8,7 @@ import com.ayd2.library.models.configuration.Configuration;
 import com.ayd2.library.repositories.configuration.ConfigurationRepository;
 import com.ayd2.library.services.s3.S3Service;
 
+import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import java.io.IOException;
@@ -18,17 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ConfigurationRepository configurationRepository;
     private final S3Service s3Service;
-    private final ConfigurationMapper configurationMapper = ConfigurationMapper.INSTANCE;
-
-    public ConfigurationServiceImpl(ConfigurationRepository configurationRepository, S3Service s3Service) {
-        this.s3Service = s3Service;
-        this.configurationRepository = configurationRepository;
-    }
+    private final ConfigurationMapper configurationMapper;
 
     public ConfigurationResponseDTO getConfiguration() throws NotFoundException {
         Configuration configuration = configurationRepository.findFirstByOrderByIdAsc()

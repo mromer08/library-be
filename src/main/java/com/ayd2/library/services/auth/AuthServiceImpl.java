@@ -43,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenService jwtTokenService;
     private final StudentRepository studentRepository;
     private final DegreeRepository degreeRepository;
+    private final StudentRegistrationMapper studentRegistrationMapper;
 
     public Map<String, String> login(LoginDTO loginDto) throws AuthenticationException, ServiceException {
         Authentication authentication = authenticationManager.authenticate(
@@ -84,8 +85,8 @@ public class AuthServiceImpl implements AuthService {
             throw new NotFoundException("Degree not found");
         }
 
-        UserAccount userAccount = StudentRegistrationMapper.INSTANCE.toUserAccount(request.userAccount());
-        Student student = StudentRegistrationMapper.INSTANCE.toStudent(request.student());
+        UserAccount userAccount = studentRegistrationMapper.toUserAccount(request.userAccount());
+        Student student = studentRegistrationMapper.toStudent(request.student());
 
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
 

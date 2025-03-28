@@ -5,6 +5,9 @@ import com.ayd2.library.exceptions.*;
 import com.ayd2.library.mappers.author.AuthorMapper;
 import com.ayd2.library.models.author.Author;
 import com.ayd2.library.repositories.author.AuthorRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +16,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
-    private final AuthorMapper authorMapper = AuthorMapper.INSTANCE;
-
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    private final AuthorMapper authorMapper;
 
     @Override
     public AuthorResponseDTO createAuthor(NewAuthorRequestDTO authorRequestDTO) throws DuplicatedEntityException {

@@ -12,7 +12,7 @@ import com.ayd2.library.dto.degrees.NewDegreeRequestDTO;
 import com.ayd2.library.dto.degrees.UpdateDegreeRequestDTO;
 import com.ayd2.library.models.degree.Degree;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DegreeMapper {
     DegreeMapper INSTANCE = Mappers.getMapper(DegreeMapper.class);
 

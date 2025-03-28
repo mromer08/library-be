@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 import com.ayd2.library.dto.authors.*;
 import com.ayd2.library.models.author.Author;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AuthorMapper {
     AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 

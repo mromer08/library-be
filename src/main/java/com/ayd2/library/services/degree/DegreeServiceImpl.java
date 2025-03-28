@@ -5,6 +5,9 @@ import com.ayd2.library.exceptions.*;
 import com.ayd2.library.mappers.degree.DegreeMapper;
 import com.ayd2.library.models.degree.Degree;
 import com.ayd2.library.repositories.degree.DegreeRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,14 +17,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class DegreeServiceImpl implements DegreeService {
 
     private final DegreeRepository degreeRepository;
-    private final DegreeMapper degreeMapper = DegreeMapper.INSTANCE;
-
-    public DegreeServiceImpl(DegreeRepository degreeRepository) {
-        this.degreeRepository = degreeRepository;
-    }
+    private final DegreeMapper degreeMapper;
 
     @Override
     public DegreeResponseDTO createDegree(NewDegreeRequestDTO degreeRequestDTO) throws DuplicatedEntityException {
