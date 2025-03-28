@@ -8,4 +8,5 @@ import com.ayd2.library.models.student.Student;
 
 public interface StudentRepository extends JpaRepository<Student, UUID> {
     boolean existsByCarnet(Long carnet);
+    boolean existsByCarnetAndIdNot(Long carnet, UUID id);
 }

@@ -99,6 +99,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasAuthority("LIBRARIAN")
 
+                        .requestMatchers(HttpMethod.GET, "/students").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/students/{id}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/students/{id}").hasAuthority("LIBRARIAN")
+
                         .requestMatchers("/ping/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/configuration").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/configuration").hasAuthority("LIBRARIAN")
