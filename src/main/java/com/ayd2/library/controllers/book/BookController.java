@@ -1,6 +1,7 @@
 package com.ayd2.library.controllers.book;
 
 import com.ayd2.library.dto.books.BookResponseDTO;
+import com.ayd2.library.dto.books.BookSearchRequestDTO;
 import com.ayd2.library.dto.books.NewBookRequestDTO;
 import com.ayd2.library.dto.books.UpdateBookRequestDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
@@ -56,6 +57,13 @@ public class BookController {
         PagedResponseDTO<BookResponseDTO> response = bookService.getAllBooks(pageable);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<PagedResponseDTO<BookResponseDTO>> searchBooks(
+            @Valid BookSearchRequestDTO request, @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(bookService.searchBooks(request, pageable));
+    }
+
 
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")

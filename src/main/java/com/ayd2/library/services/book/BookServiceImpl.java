@@ -12,12 +12,14 @@ import com.ayd2.library.repositories.author.AuthorRepository;
 import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 import com.ayd2.library.services.s3.S3Service;
+import com.ayd2.library.specifications.BookSpecs;
 
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -135,4 +137,28 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
     }
+
+    @Override
+    public PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable) {
+        Specification<Book> spec = Specification
+                .where(BookSpecs.titleContains(request.title()))
+                .and(BookSpecs.codeEquals(request.code()))
+                .and(BookSpecs.isbnEquals(request.isbn()))
+                .and(BookSpecs.minPrice(request.minPrice()))
+                .and(BookSpecs.maxPrice(request.maxPrice()))
+                .and(BookSpecs.minQuantity(request.minQuantity()))
+                .and(BookSpecs.maxQuantity(request.maxQuantity()))
+                .and(BookSpecs.minAvailableCopies(request.minAvailableCopies()))
+                .and(BookSpecs.maxAvailableCopies(request.maxAvailableCopies()))
+                .and(BookSpecs.publicationDateAfter(request.publicationStartDate()))
+                .and(BookSpecs.publicationDateBefore(request.publicationEndDate()))
+                .and(BookSpecs.hasAuthorIds(request.authorIds()))
+                .and(BookSpecs.hasPublisherIds(request.publisherIds()));
+
+        Page<Book> page = bookRepository.findAll(spec, pageable);
+        Page<BookResponseDTO> dtoPage = page.map(bookMapper::toBookResponseDTO);
+
+        return bookPageMapper.toPagedResponse(dtoPage);
+    }
+
 }

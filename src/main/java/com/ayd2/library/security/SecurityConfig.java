@@ -90,8 +90,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/degrees/{id}").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/degrees/{id}").hasAuthority("LIBRARIAN")
 
-                        .requestMatchers(HttpMethod.GET, "/books").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/books/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/books/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/books").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.PUT, "/books/{id}").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/books/{id}").hasAuthority("LIBRARIAN")
