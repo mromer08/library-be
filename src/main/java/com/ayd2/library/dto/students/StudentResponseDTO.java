@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public record StudentResponseDTO(
     UUID id,
-    Boolean penalty,
+    Boolean isSanctioned,
     Long carnet,
     String imageUrl,
     String name

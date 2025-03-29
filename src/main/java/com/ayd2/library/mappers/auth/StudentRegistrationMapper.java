@@ -24,6 +24,7 @@ public interface StudentRegistrationMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userAccount", ignore = true)
     @Mapping(target = "degree", ignore = true)
-    @Mapping(target = "penalty", ignore = true)
+    @Mapping(target = "isSanctioned", ignore = true)
+    @Mapping(target = "debt", ignore = true)
     Student toStudent(NewStudentRequestDTO studentDTO);
 }

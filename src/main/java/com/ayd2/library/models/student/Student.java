@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,10 @@ public class Student {
     private UserAccount userAccount;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean penalty;
+    private Boolean isSanctioned;
+
+    @Column
+    private BigDecimal debt;
 
     @Column(nullable = false, unique = true)
     private Long carnet;

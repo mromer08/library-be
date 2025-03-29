@@ -20,7 +20,10 @@ public record NewBookRequestDTO(
     String title,
 
     @NotBlank(message = "Code is required")
-    @Size(max = 20, message = "Code must be less than 20 characters")
+    @Pattern(
+        regexp = "^\\d{3}-[A-Z]{3}$",
+        message = "Book code must be in the format 000-XXX"
+    )
     String code,
 
     @NotBlank(message = "ISBN is required")

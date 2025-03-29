@@ -1,5 +1,6 @@
 package com.ayd2.library.repositories.book;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,8 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     boolean existsByIsbn(String isbn);
 
     boolean existsByCode(String code);
+
+    Optional<Book> findByCode(String isbn);
 
     // @Query("SELECT b FROM book b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%',
     // :query, '%')) " +

@@ -53,7 +53,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         existingStudent.setCarnet(updateStudent.getCarnet());
-        existingStudent.setPenalty(updateStudent.getPenalty());
+        // existingStudent.setPenalty(updateStudent.getPenalty());
 
         Degree degree = degreeRepository.findById(updateStudent.getDegree().getId())
                 .orElseThrow(() -> new NotFoundException("Degree not found"));

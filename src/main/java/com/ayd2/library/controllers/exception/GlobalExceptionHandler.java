@@ -55,6 +55,33 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(NoAvailableCopiesException.class)
+    ProblemDetail handleNoAvailableCopiesException(NoAvailableCopiesException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("No Available Copies");
+        problemDetail.setProperty("error_category", "Loan Error");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(LoanLimitExceededException.class)
+    ProblemDetail handleLoanLimitExceededException(LoanLimitExceededException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("Loan Limit Exceeded");
+        problemDetail.setProperty("error_category", "Loan Error");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(StudentSanctionedException.class)
+    ProblemDetail handleStudentSanctionedException(StudentSanctionedException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("Student Sanctioned");
+        problemDetail.setProperty("error_category", "Loan Error");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     ProblemDetail handleAuthenticationException(AuthenticationException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
