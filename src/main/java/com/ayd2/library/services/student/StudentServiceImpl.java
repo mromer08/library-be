@@ -1,5 +1,6 @@
 package com.ayd2.library.services.student;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ayd2.library.dto.file.FileImportErrorDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.students.StudentDetailResponseDTO;
 import com.ayd2.library.dto.students.StudentResponseDTO;
@@ -15,6 +17,7 @@ import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.mappers.student.StudentMapper;
 import com.ayd2.library.models.degree.Degree;
+import com.ayd2.library.models.file.EntityType;
 import com.ayd2.library.models.student.Student;
 import com.ayd2.library.repositories.degree.DegreeRepository;
 import com.ayd2.library.repositories.student.StudentRepository;
@@ -82,6 +85,13 @@ public class StudentServiceImpl implements StudentService {
             throw new NotFoundException("Student not found with id: " + id);
         }
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public Boolean createFromText(String text, EntityType entityType, List<FileImportErrorDTO> errors)
+            throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createFromText'");
     }
 
 }

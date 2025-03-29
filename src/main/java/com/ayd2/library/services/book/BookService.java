@@ -1,6 +1,7 @@
 package com.ayd2.library.services.book;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
@@ -8,9 +9,11 @@ import org.springframework.data.domain.Pageable;
 import com.ayd2.library.dto.books.BookResponseDTO;
 import com.ayd2.library.dto.books.NewBookRequestDTO;
 import com.ayd2.library.dto.books.UpdateBookRequestDTO;
+import com.ayd2.library.dto.file.FileImportErrorDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
+import com.ayd2.library.models.file.EntityType;
 
 import software.amazon.awssdk.core.exception.SdkException;
 
@@ -20,5 +23,6 @@ public interface BookService {
     BookResponseDTO getBook(UUID id) throws NotFoundException;
     PagedResponseDTO<BookResponseDTO> getAllBooks(Pageable pageable);
     void deleteBook(UUID id) throws NotFoundException;
+    boolean createFromText(String text, EntityType entityType, List<FileImportErrorDTO> errors) throws Exception;
 
 }

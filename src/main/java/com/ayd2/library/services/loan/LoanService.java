@@ -1,12 +1,15 @@
 package com.ayd2.library.services.loan;
 
+import com.ayd2.library.dto.file.FileImportErrorDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.loan.*;
 import com.ayd2.library.exceptions.LoanLimitExceededException;
 import com.ayd2.library.exceptions.NoAvailableCopiesException;
 import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.exceptions.StudentSanctionedException;
+import com.ayd2.library.models.file.EntityType;
 
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +24,5 @@ public interface LoanService {
     PagedResponseDTO<LoanResponseDTO> getAllLoans(Pageable pageable);
 
     void deleteLoan(UUID id) throws NotFoundException;
+    boolean createFromText(String text, EntityType entityType, List<FileImportErrorDTO> errors) throws Exception;
 }

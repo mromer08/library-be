@@ -1,10 +1,12 @@
 package com.ayd2.library.services.loan;
 
 import com.ayd2.library.dto.loan.*;
+import com.ayd2.library.dto.file.FileImportErrorDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.*;
 import com.ayd2.library.mappers.loan.LoanMapper;
 import com.ayd2.library.models.book.Book;
+import com.ayd2.library.models.file.EntityType;
 import com.ayd2.library.models.loan.Loan;
 import com.ayd2.library.models.student.Student;
 import com.ayd2.library.repositories.book.BookRepository;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -106,6 +109,13 @@ public class LoanServiceImpl implements LoanService {
             
         }
         loanRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean createFromText(String text, EntityType entityType, List<FileImportErrorDTO> errors)
+            throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createFromText'");
     }
 }
 

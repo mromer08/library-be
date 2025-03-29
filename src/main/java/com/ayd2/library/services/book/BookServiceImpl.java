@@ -1,12 +1,14 @@
 package com.ayd2.library.services.book;
 
 import com.ayd2.library.dto.books.*;
+import com.ayd2.library.dto.file.FileImportErrorDTO;
 import com.ayd2.library.exceptions.*;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.mappers.book.BookMapper;
 import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.models.author.Author;
 import com.ayd2.library.models.book.Book;
+import com.ayd2.library.models.file.EntityType;
 import com.ayd2.library.models.publisher.Publisher;
 import com.ayd2.library.repositories.author.AuthorRepository;
 import com.ayd2.library.repositories.book.BookRepository;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -134,5 +137,12 @@ public class BookServiceImpl implements BookService {
 
         }
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Boolean createFromText(String text, EntityType entityType, List<FileImportErrorDTO> errors)
+            throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createFromText'");
     }
 }
