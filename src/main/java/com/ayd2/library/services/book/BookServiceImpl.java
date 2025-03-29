@@ -141,9 +141,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable) {
         Specification<Book> spec = Specification
-                .where(BookSpecs.titleContains(request.title()))
-                .and(BookSpecs.codeEquals(request.code()))
-                .and(BookSpecs.isbnEquals(request.isbn()))
+                .where(BookSpecs.titleContains(request.stringSearch()))
+                .or(BookSpecs.codeEquals(request.stringSearch()))
+                .or(BookSpecs.isbnEquals(request.stringSearch()))
                 .and(BookSpecs.minPrice(request.minPrice()))
                 .and(BookSpecs.maxPrice(request.maxPrice()))
                 .and(BookSpecs.minQuantity(request.minQuantity()))
