@@ -16,7 +16,7 @@ public record NewBookRequestDTO(
     UUID publisherId,
 
     @NotBlank(message = "Title is required")
-    @Size(max = 255, message = "Title must be less than 255 characters")
+    @Size(min = 3, max = 255, message = "Title must be between 3 to 255 characters")
     String title,
 
     @NotBlank(message = "Code is required")
@@ -27,8 +27,9 @@ public record NewBookRequestDTO(
     String code,
 
     @NotBlank(message = "ISBN is required")
-    @Size(max = 20, message = "ISBN must be less than 20 characters")
+    @Pattern(regexp = "^978-?\\d{3}-?\\d{3}-?\\d{3}-?\\d{1}$", message = "ISBN must be in the format 978-XXX-XXX-XXX-X or 978XXXXXXXXXXXX")
     String isbn,
+    
 
     @NotNull(message = "Quantity is required")
     @PositiveOrZero(message = "Quantity must be a positive number or zero")

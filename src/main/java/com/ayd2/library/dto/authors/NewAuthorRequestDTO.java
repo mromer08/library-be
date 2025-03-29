@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 public record NewAuthorRequestDTO(
     @NotBlank(message = "Name is required")
-    @Size(max = 255, message = "Name must be less than 255 characters")
+    @Size(min = 3, max = 255, message = "Name must be between 3 to 255 characters")
     String name,
 
-    @Size(max = 100, message = "Nationality must be less than 100 characters")
+    @Size(min = 3, max = 100, message = "Nationality must be between 3 to 100 characters")
     String nationality,
 
     @Past(message = "Birth date must be in the past")

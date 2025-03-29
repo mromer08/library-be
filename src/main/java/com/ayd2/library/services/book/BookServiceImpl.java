@@ -40,6 +40,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponseDTO createBook(NewBookRequestDTO bookRequestDTO)
             throws DuplicatedEntityException, NotFoundException, IOException, SdkException {
+        String cleanedIsbn = bookRequestDTO.isbn().replaceAll("-", "");
         if (bookRepository.existsByIsbn(bookRequestDTO.isbn())) {
             throw new DuplicatedEntityException("A book with the ISBN '" + bookRequestDTO.isbn() + "' already exists.");
         }
@@ -60,6 +61,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookMapper.toBook(bookRequestDTO);
 
         book.setAvailableCopies(book.getQuantity());
+        book.setIsbn(cleanedIsbn);
         book.setAuthor(author);
         book.setPublisher(publisher);
 
