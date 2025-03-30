@@ -36,4 +36,13 @@ public class Configuration {
 
     @Column(length = 20)
     private String phone;
+
+    @Column
+    private Integer maxLoans;
+    
+    @Column
+    private Integer loanPeriodDays;
+
+    @Column
+    private Integer loanOverdueLimit;
 }

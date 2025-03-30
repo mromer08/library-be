@@ -8,5 +8,8 @@ public record ConfigurationResponseDTO(
     BigDecimal dailyRate,
     BigDecimal lateFee,
     BigDecimal lossFee,
-    String phone
+    String phone,
+    Integer maxLoans,
+    Integer loanPeriodDays,    
+    Integer loanOverdueLimit
 ) {}

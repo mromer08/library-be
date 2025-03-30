@@ -1,5 +1,4 @@
 package com.ayd2.library.dto.configurations;
-
 import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
@@ -23,6 +22,15 @@ public record UpdateConfigurationRequestDTO(
 
     @Size(max = 20, message = "Phone number must be less than 20 characters")
     String phone,
+
+    @Positive(message = "Max loans must be positive")
+    Integer maxLoans,
+
+    @Positive(message = "Loan period days must be positive")
+    Integer loanPeriodDays,
+
+    @Positive(message = "Loan overdue limit must be positive")
+    Integer loanOverdueLimit,
     
     MultipartFile imageFile
 ) {}

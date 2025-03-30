@@ -1,6 +1,7 @@
 package com.ayd2.library.services.loan;
 
 import com.ayd2.library.dto.loan.*;
+import com.ayd2.library.dto.configurations.ConfigurationResponseDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.*;
 import com.ayd2.library.mappers.loan.LoanMapper;
@@ -10,6 +11,7 @@ import com.ayd2.library.models.student.Student;
 import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.loan.LoanRepository;
 import com.ayd2.library.repositories.student.StudentRepository;
+import com.ayd2.library.services.configuration.ConfigurationService;
 import com.ayd2.library.mappers.generic.GenericPageMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +25,12 @@ import java.util.UUID;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
-public class LoanServiceImpl implements LoanService {
+public class LoanServiceImpl implements LoanService {    
 
     private final LoanRepository loanRepository;
     private final BookRepository bookRepository;
     private final StudentRepository studentRepository;
+    private final ConfigurationService configurationService;
     private final LoanMapper loanMapper;
     private final GenericPageMapper loanPageMapper;
 
@@ -38,12 +41,16 @@ public class LoanServiceImpl implements LoanService {
         Student student = studentRepository.findByCarnet(loanRequestDTO.carnet())
                 .orElseThrow(() -> new NotFoundException("Student not found with carnet: " + loanRequestDTO.carnet()));
 
+        ConfigurationResponseDTO config = configurationService.getConfiguration();
         
-                // boolean isSanctioned = loanRepository.existsByStudentAndReturnDateBefore(student, LocalDate.now().minusMonths(1));
-                // if (isSanctioned) {
-                //     throw new StudentSanctionedException("Student is sanctioned due to overdue loans.");
-                // }
+        if (student.getIsSanctioned()) {
+            throw new StudentSanctionedException("Student is sanctioned due to overdue loans.");
+        }
 
+        long activeLoans = loanRepository.countByStudentAndReturnDateIsNull(student);
+        if (activeLoans >= config.maxLoans()) {
+            throw new LoanLimitExceededException("Student has exceeded the loan limit" );
+        }
         Book book = bookRepository.findByCode(loanRequestDTO.bookCode())
                 .orElseThrow(() -> new NotFoundException("Book not found with code: " + loanRequestDTO.bookCode()));
 
@@ -51,17 +58,12 @@ public class LoanServiceImpl implements LoanService {
             throw new NoAvailableCopiesException("No available copies for book: " + loanRequestDTO.bookCode());
         }
 
-        long activeLoans = loanRepository.countByStudentAndReturnDateIsNull(student);
-        if (activeLoans >= 3) {
-            throw new LoanLimitExceededException("Student has exceeded the loan limit (3 active loans)." );
-        }
-
-
         Loan loan = new Loan();
         loan.setBook(book);
         loan.setStudent(student);
+        loan.setDebt(config.dailyRate());
         loan.setLoanDate(loanRequestDTO.loanDate());
-        loan.setDueDate(loanRequestDTO.loanDate().plusDays(3));
+        loan.setDueDate(loanRequestDTO.loanDate().plusDays(config.loanPeriodDays()));
 
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.save(book);
@@ -69,21 +71,6 @@ public class LoanServiceImpl implements LoanService {
 
         return loanMapper.toLoanResponseDTO(savedLoan);
     }
-
-    // @Override
-    // public LoanResponseDTO updateLoan(UUID id, UpdateLoanRequestDTO loanRequestDTO) throws NotFoundException {
-    //     Loan loan = loanRepository.findById(id)
-    //             .orElseThrow(() -> new NotFoundException("Loan not found with id: " + id));
-
-    //     if (loanRequestDTO.returnDate() != null) {
-    //         Book book = loan.getBook();
-    //         book.setAvailableCopies(book.getAvailableCopies() + 1);
-    //         bookRepository.save(book);
-    //     }
-
-    //     Loan updatedLoan = loanRepository.save(loan);
-    //     return loanMapper.toLoanResponseDTO(updatedLoan);
-    // }
 
     @Override
     public LoanResponseDTO getLoanById(UUID id) throws NotFoundException {

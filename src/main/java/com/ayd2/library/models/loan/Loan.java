@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -37,4 +38,7 @@ public class Loan {
 
     @Column
     private LocalDate returnDate;
+
+    @Column
+    private BigDecimal debt;
 }

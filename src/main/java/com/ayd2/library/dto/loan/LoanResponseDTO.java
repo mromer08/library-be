@@ -1,5 +1,6 @@
 package com.ayd2.library.dto.loan;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -12,5 +13,6 @@ public record LoanResponseDTO(
     StudentResponseDTO student,
     LocalDate loanDate,
     LocalDate dueDate,
-    LocalDate returnDate
+    LocalDate returnDate,
+    BigDecimal debt
 ) {}
