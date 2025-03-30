@@ -26,7 +26,8 @@ public class LoanController {
 
     @PostMapping
     public ResponseEntity<LoanResponseDTO> createLoan(@RequestBody @Valid NewLoanRequestDTO loanRequestDTO)
-            throws NotFoundException, StudentSanctionedException, NoAvailableCopiesException, LoanLimitExceededException {
+            throws NotFoundException, StudentSanctionedException, NoAvailableCopiesException,
+            LoanLimitExceededException {
         LoanResponseDTO responseDTO = loanService.createLoan(loanRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
@@ -47,4 +48,5 @@ public class LoanController {
         loanService.deleteLoan(id);
         return ResponseEntity.noContent().build();
     }
+
 }

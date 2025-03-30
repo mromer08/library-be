@@ -13,6 +13,6 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
 
     boolean existsByCode(String code);
 
-    Optional<Book> findByCode(String isbn);
+    Optional<Book> findByCode(String code);
 
 }

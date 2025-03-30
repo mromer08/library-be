@@ -1,12 +1,10 @@
 package com.ayd2.library.dto.payment;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
-import com.ayd2.library.models.payment.PayType;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 public record NewPaymentRequestDTO(
     @NotNull(message = "Loan is required")
@@ -14,8 +12,14 @@ public record NewPaymentRequestDTO(
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be positive")
-    BigDecimal amount,
+    BigDecimal normalLoanDebt,
 
-    @NotNull(message = "Pay type is required")
-    PayType payType
+    @Positive(message = "Amount must be positive")
+    BigDecimal overdueLoanDebt,
+
+    @Positive(message = "Amount must be positive")
+    BigDecimal sanctionDebt,
+
+    @FutureOrPresent(message = "Paid date must be in the present or future")
+    LocalDate paidDate
 ) {}

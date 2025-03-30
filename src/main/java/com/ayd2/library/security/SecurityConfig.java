@@ -68,7 +68,6 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/loans/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs*/**").permitAll()
 
@@ -98,6 +97,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAuthority("LIBRARIAN")
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasAuthority("LIBRARIAN")
+
+                        .requestMatchers(HttpMethod.GET, "/loans/**").hasAnyAuthority("LIBRARIAN", "STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/loans/{id}").hasAuthority("LIBRARIAN")
+                        .requestMatchers(HttpMethod.DELETE, "/loans/{id}").hasAuthority("LIBRARIAN")
+
+                        .requestMatchers("/payments/**").hasAuthority("LIBRARIAN")
 
                         .requestMatchers(HttpMethod.GET, "/students").permitAll()
                         .requestMatchers(HttpMethod.GET, "/students/{id}").permitAll()
