@@ -53,17 +53,17 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<PagedResponseDTO<BookResponseDTO>> getAllBooks(
-            @PageableDefault Pageable pageable) {
+            @Valid BookSearchRequestDTO request, @PageableDefault Pageable pageable) {
 
-        PagedResponseDTO<BookResponseDTO> response = bookService.getAllBooks(pageable);
+        PagedResponseDTO<BookResponseDTO> response = bookService.getAllBooks(request, pageable);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<PagedResponseDTO<BookResponseDTO>> searchBooks(
-            @Valid BookSearchRequestDTO request, @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(bookService.searchBooks(request, pageable));
-    }
+    // @GetMapping("/search")
+    // public ResponseEntity<PagedResponseDTO<BookResponseDTO>> searchBooks(
+    //         @Valid BookSearchRequestDTO request, @PageableDefault Pageable pageable) {
+    //     return ResponseEntity.ok(bookService.searchBooks(request, pageable));
+    // }
 
 
     @DeleteMapping("/{id}")

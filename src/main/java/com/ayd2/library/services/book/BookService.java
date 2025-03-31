@@ -20,8 +20,8 @@ public interface BookService {
     BookResponseDTO createBook(NewBookRequestDTO bookRequestDTO) throws DuplicatedEntityException, NotFoundException, IOException, SdkException;
     BookResponseDTO updateBook(UUID id, UpdateBookRequestDTO bookRequestDTO) throws NotFoundException, IOException, SdkException;
     BookResponseDetailDTO getBook(UUID id) throws NotFoundException;
-    PagedResponseDTO<BookResponseDTO> getAllBooks(Pageable pageable);
-    PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable);
+    PagedResponseDTO<BookResponseDTO> getAllBooks(BookSearchRequestDTO request, Pageable pageable);
+    // PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable);
     void deleteBook(UUID id) throws NotFoundException;
 
 }

@@ -8,7 +8,7 @@ import java.util.UUID;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record BookSearchRequestDTO(
-        String stringSearch,
+        String q,
 
         @PositiveOrZero(message = "minPrice must be positive or zero")
         BigDecimal minPrice,
