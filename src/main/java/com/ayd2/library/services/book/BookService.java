@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 
 import com.ayd2.library.dto.books.BookResponseDTO;
+import com.ayd2.library.dto.books.BookResponseDetailDTO;
 import com.ayd2.library.dto.books.BookSearchRequestDTO;
 import com.ayd2.library.dto.books.NewBookRequestDTO;
 import com.ayd2.library.dto.books.UpdateBookRequestDTO;
@@ -18,7 +19,7 @@ import software.amazon.awssdk.core.exception.SdkException;
 public interface BookService {
     BookResponseDTO createBook(NewBookRequestDTO bookRequestDTO) throws DuplicatedEntityException, NotFoundException, IOException, SdkException;
     BookResponseDTO updateBook(UUID id, UpdateBookRequestDTO bookRequestDTO) throws NotFoundException, IOException, SdkException;
-    BookResponseDTO getBook(UUID id) throws NotFoundException;
+    BookResponseDetailDTO getBook(UUID id) throws NotFoundException;
     PagedResponseDTO<BookResponseDTO> getAllBooks(Pageable pageable);
     PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable);
     void deleteBook(UUID id) throws NotFoundException;

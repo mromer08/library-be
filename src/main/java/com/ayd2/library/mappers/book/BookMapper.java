@@ -14,7 +14,10 @@ import com.ayd2.library.models.book.Book;
 public interface BookMapper {
     BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
+    @Mapping(source = "author.name", target = "author")
     BookResponseDTO toBookResponseDTO(Book book);
+    
+    BookResponseDetailDTO toBookResponseDetailDTO(Book book);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "author", ignore = true)

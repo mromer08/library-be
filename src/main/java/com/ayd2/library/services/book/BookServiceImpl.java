@@ -116,10 +116,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponseDTO getBook(UUID id) throws NotFoundException {
+    public BookResponseDetailDTO getBook(UUID id) throws NotFoundException {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found with id: " + id));
-        return bookMapper.toBookResponseDTO(book);
+        return bookMapper.toBookResponseDetailDTO(book);
     }
 
     @Override

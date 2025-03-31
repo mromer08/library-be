@@ -1,6 +1,7 @@
 package com.ayd2.library.controllers.book;
 
 import com.ayd2.library.dto.books.BookResponseDTO;
+import com.ayd2.library.dto.books.BookResponseDetailDTO;
 import com.ayd2.library.dto.books.BookSearchRequestDTO;
 import com.ayd2.library.dto.books.NewBookRequestDTO;
 import com.ayd2.library.dto.books.UpdateBookRequestDTO;
@@ -45,8 +46,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponseDTO> getBook(@PathVariable UUID id) throws ServiceException {
-        BookResponseDTO responseDTO = bookService.getBook(id);
+    public ResponseEntity<BookResponseDetailDTO> getBook(@PathVariable UUID id) throws ServiceException {
+        BookResponseDetailDTO responseDTO = bookService.getBook(id);
         return ResponseEntity.ok(responseDTO);
     }
 
