@@ -7,7 +7,7 @@ VALUES
 -- Crear estudiantes
 INSERT INTO student (id, user_id, penalty, carnet, degree_id)
 VALUES
-    (gen_random_uuid(), (SELECT id FROM user_account WHERE email = 'student1@example.com'), FALSE, 2023000001, (SELECT id FROM degree WHERE code = 2016000001));
+    (gen_random_uuid(), (SELECT id FROM user_account WHERE email = 'student1@example.com'), FALSE, 202030189, (SELECT id FROM degree WHERE code = 2001));
 
 -- Crear bibliotecarios
 INSERT INTO librarian (id, user_id, hire_date)
