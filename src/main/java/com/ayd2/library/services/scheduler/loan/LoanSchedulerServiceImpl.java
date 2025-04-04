@@ -1,4 +1,4 @@
-package com.ayd2.library.services.scheduler;
+package com.ayd2.library.services.scheduler.loan;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,15 +20,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
-public class LoanSchedulerServiceImpl implements LoanSchedulerService{
+public class LoanSchedulerServiceImpl implements LoanSchedulerService {
     private final LoanService loanService;
     private final LoanRepository loanRepository;
     private final ConfigurationService configurationService;
 
-        @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     @Override
-    public void processDailyLoanCalculate() throws ServiceException{
+    public void processDailyLoanCalculate() throws ServiceException {
         ConfigurationResponseDTO config = configurationService.getConfiguration();
         LocalDate today = LocalDate.now();
         List<Loan> activeLoans = loanRepository.findAll(LoanSpecs.isNotReturned());
