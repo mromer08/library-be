@@ -1,0 +1,9 @@
+services:
+  library-app:
+    build: .
+    container_name: library-container-dev
+    ports:
+      - "4000:3000"
+    env_file:
+      - .env
+    restart: always
