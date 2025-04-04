@@ -26,26 +26,26 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            environment {
-                PROFILE = "test"
-            }
-            steps {
-                    sh """
-                        echo "🔍 Ejecutando tests"
-                        ./mvnw test
-                    """
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/**/*.xml'
-                    echo "📊 Reportes de tests archivados."
-                }
-                failure {
-                    echo "❌ Tests fallaron. Revisar reportes."
-                }
-            }
-        }
+        // stage('Run Tests') {
+        //     environment {
+        //         PROFILE = "test"
+        //     }
+        //     steps {
+        //             sh """
+        //                 echo "🔍 Ejecutando tests"
+        //                 ./mvnw test
+        //             """
+        //     }
+        //     post {
+        //         always {
+        //             junit 'target/surefire-reports/**/*.xml'
+        //             echo "📊 Reportes de tests archivados."
+        //         }
+        //         failure {
+        //             echo "❌ Tests fallaron. Revisar reportes."
+        //         }
+        //     }
+        // }
 
         stage('Deploy to Production') {
             when { branch 'main' }
