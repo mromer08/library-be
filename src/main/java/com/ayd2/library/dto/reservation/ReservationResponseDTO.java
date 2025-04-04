@@ -10,5 +10,6 @@ public record ReservationResponseDTO(
     UUID id,
     BookResponseDTO book,
     StudentResponseDTO student,
-    LocalDate reservationDate
+    LocalDate reservationDate,
+    LocalDate expirationDate
 ) {}
