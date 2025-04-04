@@ -20,10 +20,13 @@ import com.ayd2.library.dto.report.TopStudentLoansReportDTO;
 import com.ayd2.library.dto.students.StudentResponseDTO;
 import com.ayd2.library.mappers.generic.GenericPageMapper;
 import com.ayd2.library.mappers.loan.LoanMapper;
+import com.ayd2.library.mappers.student.StudentMapper;
 import com.ayd2.library.models.loan.Loan;
 import com.ayd2.library.models.payment.PayType;
+import com.ayd2.library.models.student.Student;
 import com.ayd2.library.repositories.loan.LoanRepository;
 import com.ayd2.library.repositories.payment.PaymentRepository;
+import com.ayd2.library.repositories.student.StudentRepository;
 import com.ayd2.library.specifications.loan.LoanSpecs;
 
 import lombok.RequiredArgsConstructor;
@@ -32,10 +35,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class, readOnly = true)
 public class ReportServiceImpl implements ReportService {
+
+    private final StudentRepository studentRepository;
     private final LoanRepository loanRepository;
     private final PaymentRepository paymentRepository;
     private final GenericPageMapper genericPageMapper;
     private final LoanMapper loanMapper;
+    private final StudentMapper studentMapper;
 
     @Override
     public PagedResponseDTO<LoanResponseDTO> findLoansByDueDate(LocalDate date, Pageable pageable) {
@@ -60,7 +66,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public RevenueReportDTO generateRevenueReport(LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        // Obtener préstamos en el intervalo
         Specification<Loan> loanSpec = Specification
                 .where(LoanSpecs.isReturned())
                 .and(LoanSpecs.returnDateAfter(startDate))
@@ -71,7 +76,6 @@ public class ReportServiceImpl implements ReportService {
         Page<LoanResponseDTO> dtoPage = loanPage.map(loanMapper::toLoanResponseDTO);
         PagedResponseDTO<LoanResponseDTO> loans = genericPageMapper.toPagedResponse(dtoPage);
 
-        // Obtener montos por tipo de pago
         BigDecimal total = paymentRepository.getTotalRevenueBetween(startDate, endDate);
         BigDecimal totalNormal = paymentRepository.getTotalByPayTypeBetween(PayType.NORMAL_LOAN, startDate, endDate);
         BigDecimal totalOverdue = paymentRepository.getTotalByPayTypeBetween(PayType.OVERDUE_LOAN, startDate, endDate);
@@ -126,8 +130,10 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public PagedResponseDTO<StudentResponseDTO> findSanctionedStudents(Pageable pageable) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findSanctionedStudents'");
+        Page<Student> studentPage = studentRepository.findByIsSanctioned(true, pageable);
+        Page<StudentResponseDTO> dtoPage = studentPage.map(studentMapper::toStudentResponseDTO);
+        PagedResponseDTO<StudentResponseDTO> students = genericPageMapper.toPagedResponse(dtoPage);
+        return students;
     }
 
 }

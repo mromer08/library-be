@@ -104,6 +104,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/payments/**").hasAuthority("LIBRARIAN")
                         .requestMatchers("/reservations/**").hasAuthority("STUDENT")
+                        .requestMatchers("/reports/**").hasAuthority("LIBRARIAN")
 
                         .requestMatchers(HttpMethod.GET, "/students").permitAll()
                         .requestMatchers(HttpMethod.GET, "/students/{id}").permitAll()
