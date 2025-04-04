@@ -83,4 +83,9 @@ public class ReservationServiceImpl implements ReservationService {
     public int deleteByExpirationDate(LocalDate expirationDate){
         return reservationRepository.deleteByExpirationDate(expirationDate);
     }
+
+    @Override
+    public int updateExpirationDateByBook(Book book, LocalDate expirationDate){
+        return reservationRepository.updateExpirationDateByBook(book, expirationDate);
+    }
 }

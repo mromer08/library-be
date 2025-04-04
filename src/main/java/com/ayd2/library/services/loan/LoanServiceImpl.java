@@ -12,6 +12,7 @@ import com.ayd2.library.models.loan.Loan;
 import com.ayd2.library.models.student.Student;
 import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.loan.LoanRepository;
+import com.ayd2.library.repositories.reservation.ReservationRepository;
 import com.ayd2.library.repositories.student.StudentRepository;
 import com.ayd2.library.services.configuration.ConfigurationService;
 import com.ayd2.library.specifications.loan.LoanSpecs;
@@ -40,10 +41,11 @@ public class LoanServiceImpl implements LoanService {
     private final ConfigurationService configurationService;
     private final LoanMapper loanMapper;
     private final GenericPageMapper loanPageMapper;
+    private final ReservationRepository reservationRepository;
 
     @Override
     public LoanResponseDTO createLoan(NewLoanRequestDTO loanRequestDTO) throws NotFoundException,
-            StudentSanctionedException, NoAvailableCopiesException, LoanLimitExceededException {
+            StudentSanctionedException, NoAvailableCopiesException, LoanLimitExceededException, BookAlreadyReservedException {
 
         Student student = studentRepository.findByCarnet(loanRequestDTO.carnet())
                 .orElseThrow(() -> new NotFoundException("Student not found with carnet: " + loanRequestDTO.carnet()));
@@ -61,8 +63,12 @@ public class LoanServiceImpl implements LoanService {
         Book book = bookRepository.findByCode(loanRequestDTO.bookCode())
                 .orElseThrow(() -> new NotFoundException("Book not found with code: " + loanRequestDTO.bookCode()));
 
-        if (book.getAvailableCopies() == 0) {
+        if (book.getAvailableCopies() < 1) {
             throw new NoAvailableCopiesException("No available copies for book: " + loanRequestDTO.bookCode());
+        }
+
+        if (book.getAvailableCopies() < 2 && !reservationRepository.existsByBookAndStudent(book, student)) {
+            throw new BookAlreadyReservedException(String.format("The book '%s' is already reserved by an student", book.getTitle()));
         }
 
         Loan loan = new Loan();
@@ -137,7 +143,7 @@ public class LoanServiceImpl implements LoanService {
         if (paidDate.isAfter(loan.getLoanDate().plusDays(config.loanOverdueLimit()))) {
             sanctionDebt = loan.getBook().getPrice().add(config.lossFee());
             // Uncomment to apply the overdue limit to the sanction debt
-            // overdueLoanDebt = BigDecimal.valueOf(config.loanOverdueLimit()).multiply(config.lateFee());
+            overdueLoanDebt = BigDecimal.valueOf(config.loanOverdueLimit()).multiply(config.lateFee());
 
             Student student = loan.getStudent();
             if (!student.getIsSanctioned()) {

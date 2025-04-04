@@ -5,6 +5,7 @@ import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.dto.loan.*;
 import com.ayd2.library.dto.payment.CalculatePaymentRequestDTO;
 import com.ayd2.library.dto.payment.CalculatePaymentResponseDTO;
+import com.ayd2.library.exceptions.BookAlreadyReservedException;
 import com.ayd2.library.exceptions.LoanLimitExceededException;
 import com.ayd2.library.exceptions.NoAvailableCopiesException;
 import com.ayd2.library.exceptions.NotFoundException;
@@ -18,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface LoanService {
     LoanResponseDTO createLoan(NewLoanRequestDTO loanRequestDTO) throws NotFoundException, StudentSanctionedException,
-            NoAvailableCopiesException, LoanLimitExceededException;
+            NoAvailableCopiesException, LoanLimitExceededException , BookAlreadyReservedException;
 
     LoanResponseDTO getLoanById(UUID id) throws NotFoundException;
     PagedResponseDTO<LoanResponseDTO> getAllLoans(Pageable pageable);

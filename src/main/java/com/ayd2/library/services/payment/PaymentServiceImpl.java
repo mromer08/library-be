@@ -23,6 +23,7 @@ import com.ayd2.library.dto.payment.PaymentResponseDTO;
 import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.loan.LoanRepository;
 import com.ayd2.library.repositories.payment.PaymentRepository;
+import com.ayd2.library.repositories.reservation.ReservationRepository;
 import com.ayd2.library.repositories.student.StudentRepository;
 import com.ayd2.library.services.loan.LoanService;
 
@@ -32,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class PaymentServiceImpl implements PaymentService {
+    private final static int RESERVATION_MAX_DAYS = 1;
+
     private final LoanRepository loanRepository;
     private final PaymentRepository paymentRepository;
     private final StudentRepository studentRepository;
@@ -39,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final GenericPageMapper paymentPageMapper;
     private final LoanService loanService;
     private final BookRepository bookRepository;
+    private final ReservationRepository reservationRepository;
 
     @Override
     public boolean createPayment(CalculatePaymentRequestDTO paymentRequestDTO) throws ServiceException {
@@ -57,6 +61,8 @@ public class PaymentServiceImpl implements PaymentService {
         Book book = loan.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
         bookRepository.save(book);
+
+        reservationRepository.updateExpirationDateByBook(book, LocalDate.now().plusDays(RESERVATION_MAX_DAYS));
         return true;
     }
 

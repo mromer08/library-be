@@ -5,6 +5,7 @@ import com.ayd2.library.dto.reservation.ReservationResponseDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
 import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
+import com.ayd2.library.models.book.Book;
 
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +25,5 @@ public interface ReservationService {
 
     int deleteByExpirationDate(LocalDate expirationDate);
 
+    int updateExpirationDateByBook(Book book, LocalDate expirationDate);
 }

@@ -153,28 +153,4 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
     }
-
-    // @Override
-    // public PagedResponseDTO<BookResponseDTO> searchBooks(BookSearchRequestDTO request, Pageable pageable) {
-    //     Specification<Book> spec = Specification
-    //             .where(BookSpecs.titleContains(request.stringSearch()))
-    //             .or(BookSpecs.codeEquals(request.stringSearch()))
-    //             .or(BookSpecs.isbnEquals(request.stringSearch()))
-    //             .and(BookSpecs.minPrice(request.minPrice()))
-    //             .and(BookSpecs.maxPrice(request.maxPrice()))
-    //             .and(BookSpecs.minQuantity(request.minQuantity()))
-    //             .and(BookSpecs.maxQuantity(request.maxQuantity()))
-    //             .and(BookSpecs.minAvailableCopies(request.minAvailableCopies()))
-    //             .and(BookSpecs.maxAvailableCopies(request.maxAvailableCopies()))
-    //             .and(BookSpecs.publicationDateAfter(request.publicationStartDate()))
-    //             .and(BookSpecs.publicationDateBefore(request.publicationEndDate()))
-    //             .and(BookSpecs.hasAuthorIds(request.authorIds()))
-    //             .and(BookSpecs.hasPublisherIds(request.publisherIds()));
-
-    //     Page<Book> page = bookRepository.findAll(spec, pageable);
-    //     Page<BookResponseDTO> dtoPage = page.map(bookMapper::toBookResponseDTO);
-
-    //     return bookPageMapper.toPagedResponse(dtoPage);
-    // }
-
 }

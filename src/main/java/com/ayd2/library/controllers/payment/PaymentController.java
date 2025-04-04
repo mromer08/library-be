@@ -37,11 +37,9 @@ public class PaymentController {
     @PostMapping
     public ResponseEntity<Void> createPayment(@RequestBody @Valid CalculatePaymentRequestDTO paymentRequestDTO)
             throws ServiceException {
-        boolean paymentCreated = paymentService.createPayment(paymentRequestDTO);
-        if (paymentCreated) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        paymentService.createPayment(paymentRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+        
     }
 
     @GetMapping("/calculate")
