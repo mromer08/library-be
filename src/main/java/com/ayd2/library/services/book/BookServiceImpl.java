@@ -12,7 +12,7 @@ import com.ayd2.library.repositories.author.AuthorRepository;
 import com.ayd2.library.repositories.book.BookRepository;
 import com.ayd2.library.repositories.publisher.PublisherRepository;
 import com.ayd2.library.services.s3.S3Service;
-import com.ayd2.library.specifications.BookSpecs;
+import com.ayd2.library.specifications.book.BookSpecs;
 
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.exception.SdkException;

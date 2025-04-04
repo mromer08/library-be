@@ -1,4 +1,4 @@
-package com.ayd2.library.specifications;
+package com.ayd2.library.specifications.book;
 
 import com.ayd2.library.models.book.Book;
 import org.springframework.data.jpa.domain.Specification;

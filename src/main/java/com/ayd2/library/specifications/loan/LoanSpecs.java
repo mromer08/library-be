@@ -52,4 +52,9 @@ public class LoanSpecs {
         return (root, query, criteriaBuilder) -> 
             criteriaBuilder.isNull(root.get("returnDate"));
     }
+
+    public static Specification<Loan> hasDueDate(LocalDate dueDate) {
+        return (root, query, criteriaBuilder) -> 
+            dueDate == null ? null : criteriaBuilder.equal(root.get("dueDate"), dueDate);
+    }
 }
