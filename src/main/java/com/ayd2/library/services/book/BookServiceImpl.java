@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookService {
     public BookResponseDTO createBook(NewBookRequestDTO bookRequestDTO)
             throws DuplicatedEntityException, NotFoundException, IOException, SdkException {
         String cleanedIsbn = bookRequestDTO.isbn().replaceAll("-", "");
-        if (bookRepository.existsByIsbn(bookRequestDTO.isbn())) {
+        if (bookRepository.existsByIsbn(cleanedIsbn)) {
             throw new DuplicatedEntityException("A book with the ISBN '" + bookRequestDTO.isbn() + "' already exists.");
         }
 
