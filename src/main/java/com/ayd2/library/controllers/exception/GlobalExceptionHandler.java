@@ -55,6 +55,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(BookNotReservableException.class)
+    ProblemDetail handleBookNotReservableException(BookNotReservableException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("Book Not Reservable");
+        problemDetail.setProperty("error_category", "Reservation Error");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
     @ExceptionHandler(NotFoundException.class)
     ProblemDetail handleNotFoundException(NotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
