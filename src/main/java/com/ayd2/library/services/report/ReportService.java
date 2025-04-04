@@ -8,7 +8,6 @@ import com.ayd2.library.dto.report.RevenueReportDTO;
 import com.ayd2.library.dto.report.TopDegreeInLoansReportDTO;
 import com.ayd2.library.dto.report.TopStudentLoansReportDTO;
 import com.ayd2.library.dto.students.StudentResponseDTO;
-import com.ayd2.library.models.student.Student;
 
 import java.time.LocalDate;
 

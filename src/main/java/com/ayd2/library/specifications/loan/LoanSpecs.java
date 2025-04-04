@@ -30,22 +30,22 @@ public class LoanSpecs {
 
     public static Specification<Loan> loanDateBefore(LocalDate date) {
         return (root, query, criteriaBuilder) -> 
-            date == null ? null : criteriaBuilder.lessThan(root.get("loanDate"), date);
+            date == null ? null : criteriaBuilder.lessThanOrEqualTo(root.get("loanDate"), date);
     }
 
     public static Specification<Loan> loanDateAfter(LocalDate date) {
         return (root, query, criteriaBuilder) -> 
-            date == null ? null : criteriaBuilder.greaterThan(root.get("loanDate"), date);
+            date == null ? null : criteriaBuilder.greaterThanOrEqualTo(root.get("loanDate"), date);
     }
 
     public static Specification<Loan> dueDateBefore(LocalDate date) {
         return (root, query, criteriaBuilder) -> 
-            date == null ? null : criteriaBuilder.lessThan(root.get("dueDate"), date);
+            date == null ? null : criteriaBuilder.lessThanOrEqualTo(root.get("dueDate"), date);
     }
 
     public static Specification<Loan> dueDateAfter(LocalDate date) {
         return (root, query, criteriaBuilder) -> 
-            date == null ? null : criteriaBuilder.greaterThan(root.get("dueDate"), date);
+            date == null ? null : criteriaBuilder.greaterThanOrEqualTo(root.get("dueDate"), date);
     }
 
     public static Specification<Loan> isNotReturned() {
@@ -53,8 +53,23 @@ public class LoanSpecs {
             criteriaBuilder.isNull(root.get("returnDate"));
     }
 
+    public static Specification<Loan> isReturned() {
+        return (root, query, criteriaBuilder) -> 
+            criteriaBuilder.isNotNull(root.get("returnDate"));
+    }
+
     public static Specification<Loan> hasDueDate(LocalDate dueDate) {
         return (root, query, criteriaBuilder) -> 
             dueDate == null ? null : criteriaBuilder.equal(root.get("dueDate"), dueDate);
+    }
+
+    public static Specification<Loan> returnDateBefore(LocalDate date) {
+        return (root, query, criteriaBuilder) -> 
+            date == null ? null : criteriaBuilder.lessThanOrEqualTo(root.get("returnDate"), date);
+    }
+    
+    public static Specification<Loan> returnDateAfter(LocalDate date) {
+        return (root, query, criteriaBuilder) -> 
+            date == null ? null : criteriaBuilder.greaterThanOrEqualTo(root.get("returnDate"), date);
     }
 }
