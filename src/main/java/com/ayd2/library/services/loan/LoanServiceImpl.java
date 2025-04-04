@@ -45,7 +45,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public LoanResponseDTO createLoan(NewLoanRequestDTO loanRequestDTO) throws NotFoundException,
-            StudentSanctionedException, NoAvailableCopiesException, LoanLimitExceededException, BookAlreadyReservedException {
+            StudentSanctionedException, NoAvailableCopiesException, LoanLimitExceededException, BookAlreadyReservedException, DuplicatedEntityException {
 
         Student student = studentRepository.findByCarnet(loanRequestDTO.carnet())
                 .orElseThrow(() -> new NotFoundException("Student not found with carnet: " + loanRequestDTO.carnet()));
@@ -69,6 +69,15 @@ public class LoanServiceImpl implements LoanService {
 
         if (book.getAvailableCopies() < 2 && !reservationRepository.existsByBookAndStudent(book, student)) {
             throw new BookAlreadyReservedException(String.format("The book '%s' is already reserved by an student", book.getTitle()));
+        }
+
+        Specification<Loan> loanSpec = Specification.where(LoanSpecs.hasStudentCarnet(loanRequestDTO.carnet()))
+        .and(LoanSpecs.hasBookCode(loanRequestDTO.bookCode()))
+        .and(LoanSpecs.isNotReturned());
+
+        if (loanRepository.exists(loanSpec)) {
+            throw new DuplicatedEntityException("The student already has an active loan for this book");
+            
         }
 
         Loan loan = new Loan();
