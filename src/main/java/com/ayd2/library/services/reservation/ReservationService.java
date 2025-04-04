@@ -3,6 +3,7 @@ package com.ayd2.library.services.reservation;
 import com.ayd2.library.dto.reservation.NewReservationRequestDTO;
 import com.ayd2.library.dto.reservation.ReservationResponseDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
+import com.ayd2.library.exceptions.BookNotReservableException;
 import com.ayd2.library.exceptions.DuplicatedEntityException;
 import com.ayd2.library.exceptions.NotFoundException;
 import com.ayd2.library.models.book.Book;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public interface ReservationService {
     ReservationResponseDTO createReservation(UUID userAccountId, NewReservationRequestDTO reservationRequestDTO)
-            throws DuplicatedEntityException, NotFoundException;
+            throws DuplicatedEntityException, NotFoundException, BookNotReservableException;
 
     ReservationResponseDTO getReservation(UUID id) throws NotFoundException;
 

@@ -4,8 +4,7 @@ import com.ayd2.library.dto.reservation.NewReservationRequestDTO;
 import com.ayd2.library.dto.reservation.ReservationResponseDTO;
 import com.ayd2.library.dto.users.UserResponseDTO;
 import com.ayd2.library.dto.generic.PagedResponseDTO;
-import com.ayd2.library.exceptions.DuplicatedEntityException;
-import com.ayd2.library.exceptions.NotFoundException;
+import com.ayd2.library.exceptions.ServiceException;
 import com.ayd2.library.services.reservation.ReservationService;
 import com.ayd2.library.services.user.UserAccountService;
 
@@ -35,7 +34,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDTO> createReservation(
             Authentication authentication,
             @RequestBody @Valid NewReservationRequestDTO reservationRequestDTO)
-            throws DuplicatedEntityException, NotFoundException {
+            throws ServiceException {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         UserResponseDTO userAccount = userAccountService.getUserByEmail(userDetails.getUsername());
@@ -46,7 +45,7 @@ public class ReservationController {
     @GetMapping("/me")
     public ResponseEntity<PagedResponseDTO<ReservationResponseDTO>> getReservationsByAccount(
             Authentication authentication,
-            @PageableDefault Pageable pageable) throws NotFoundException {
+            @PageableDefault Pageable pageable) throws ServiceException {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         UserResponseDTO userAccount = userAccountService.getUserByEmail(userDetails.getUsername());
         PagedResponseDTO<ReservationResponseDTO> response = reservationService
@@ -55,13 +54,13 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationResponseDTO> getReservation(@PathVariable UUID id) throws NotFoundException {
+    public ResponseEntity<ReservationResponseDTO> getReservation(@PathVariable UUID id) throws ServiceException {
         ReservationResponseDTO response = reservationService.getReservation(id);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable UUID id) throws NotFoundException {
+    public ResponseEntity<Void> deleteReservation(@PathVariable UUID id) throws ServiceException    {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }

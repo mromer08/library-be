@@ -34,7 +34,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDTO createReservation(UUID userAccountId, NewReservationRequestDTO reservationRequestDTO)
-            throws DuplicatedEntityException, NotFoundException {
+            throws DuplicatedEntityException, NotFoundException, BookNotReservableException {
 
         Book book = bookRepository.findById(reservationRequestDTO.bookId())
                 .orElseThrow(() -> new NotFoundException("Book not found with id: " + reservationRequestDTO.bookId()));
@@ -42,6 +42,9 @@ public class ReservationServiceImpl implements ReservationService {
         Student student = studentRepository.findByUserAccountId(userAccountId)
                 .orElseThrow(() -> new NotFoundException("Student not found with user account: " + userAccountId));
 
+        if (book.getAvailableCopies() > 0) {
+            throw new BookNotReservableException("The book is not available for reservation");
+        }
         if (reservationRepository.existsByBookAndStudent(book, student)) {
             throw new DuplicatedEntityException("The student already has an active reservation for this book");
         }
