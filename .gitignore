@@ -34,3 +34,5 @@ build/
 
 ### Environments
 .env
+.env.dev
+.env.prod
